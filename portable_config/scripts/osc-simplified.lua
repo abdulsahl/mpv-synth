@@ -19,6 +19,8 @@ local user_opts = {
     seek_bar_knob_radius = 6,         -- corner radius of timeline knob
     showwindowed = true,        -- show OSC when windowed?
     showfullscreen = true,      -- show OSC when fullscreen?
+    scale = 1,                  -- overall size multiplier (boxes, buttons, fonts):
+                                -- 2 = double size, 0.5 = half size
     scalewindowed = 0,          -- scaling of the controller when windowed
     scalefullscreen = 0,        -- scaling of the controller when fullscreen
     valign = 0.8,               -- vertical alignment, -1 (top) to 1 (bottom)
@@ -1107,7 +1109,12 @@ local function osc_init()
     -- set canvas resolution according to display aspect and scaling setting
     local baseResY = 720
     local _, display_h, display_aspect = mp.get_osd_size()
-    local scale = 2 --user_opts.scalefullscreen
+    -- the script was designed around a canvas at half the display height
+    -- (internal factor 2); user_opts.scale multiplies on top of that, so the
+    -- default of 1 keeps the original look
+    local user_scale = tonumber(user_opts.scale)
+    if not user_scale or user_scale <= 0 then user_scale = 1 end
+    local scale = 2 * user_scale
 
     local scale_with_video
     scale_with_video = 1 --mp.get_property_native("osd-scale-by-window")
@@ -2017,4 +2024,3 @@ if user_opts.enabled then
     set_virt_mouse_area(0, 0, 0, 0, "window-controls")
     set_virt_mouse_area(0, 0, 0, 0, "window-controls-title")
 end
-

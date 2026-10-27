@@ -22,6 +22,7 @@ local o = {
     enabled      = true,
     icc_for_sdr  = false,
     tone_mapping = "bt.2390",
+    bt709_compat = false,
     osd_notify   = true,
     osd_duration = 5,
 }
